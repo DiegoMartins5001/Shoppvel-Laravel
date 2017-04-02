@@ -23,6 +23,7 @@
 		            <th>Marca</th>
 		            <th>Categoria</th>
 		            <th>Valor</th>
+		            <th>Avaliação</th>
 		            <th>Ações</th>
 		        </tr>
 		    </thead>
@@ -35,9 +36,10 @@
 		        <td>{{$prod->qtde_estoque}}</td>
 		        <td>{{$prod->marca->nome}}</td>
 		        <td>{{$prod->categoria->nome}}</td>
-		        <td>{{$prod->preco_venda}}</td>
+		        <td>{{'R$' .number_format($prod->preco_venda, 2, ',', '.')}}</td>
+		        <td>{{$prod->avaliacao_qtde}}</td>
 		        
-		        <td class="col-md-2">
+		        <td class="col-md-3">
 		            <a href="{{ url('admin/produto/'.$prod->id . '/editar') }}" class="editar">
 		                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> <b>Editar</b></a></br></br>
 		            <a href="{{ url('admin/produto/'.$prod->id . '/excluir') }}" class="excluir">

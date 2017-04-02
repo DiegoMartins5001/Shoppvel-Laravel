@@ -40,20 +40,28 @@ class ProdutoController extends Controller {
 
         }
     
-    function salvar(Request $request) {
-        
+    function salvar(Produto $produto, Request $request) {
+        $request['preco_venda'] = str_replace(',','', $request['preco_venda']);
+        $salvar = '';
+        if ($request->has('id')){
+            $salvar = ','.$request->get('id').',id';
+        } 
+        $this->validate($request, [
+            'nome' => 'required|min:4|unique:produtos,nome'.$salvar.''
+        ]);
+        $this->validate($request, [
+            'preco_venda' => 'numeric|required'
+        ]);
         $this->validate($request,[
             'categoria_id'=>'required',
-            'marca_id'=>'required|numeric',
+            'marca_id'=>'required',
             'nome'=>'required',
             'descricao'=>'required',
             'qtde_estoque'=>'required|numeric',
-            'preco_venda'=>'required',
             'avaliacao_qtde'=>'required|numeric',
             'avaliacao_total'=>'required|numeric',
             'imagem_nome'=>'required'
-            ]);
-        $request['preco_venda'] = str_replace(',','.',$request['preco_venda']);
+        ]);
         Produto::create($request->all());
         \Session::flash('mensagens-sucesso', 'Cadastrado com Sucesso');
             return redirect()->action('ProdutoController@listar')->with('mensagens-sucesso', 'Cadastrado com Sucesso!');

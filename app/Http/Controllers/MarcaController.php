@@ -21,7 +21,15 @@ class MarcaController extends Controller
         }
     
     function salvar(Request $request) {
-    	$marca = new Marca();
+    	// Validação nome igual 
+      $salvar = '';
+        if ($request->has('id')){
+            $salvar = ','.$request->get('id').',id';
+        } 
+        $this->validate($request, [
+            'nome' => 'required|min:4|unique:marcas,nome'.$salvar.''
+      ]);
+      $marca = new Marca();
     	$marca->create($request->all());
         \Session::flash('mensagens-sucesso', 'Cadastrado com Sucesso');
         $models['marcas'] = Marca::all();

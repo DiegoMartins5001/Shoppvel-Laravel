@@ -25,7 +25,8 @@ class CategoriaController extends Controller {
     } 
 
     function listar() {
-            return view('admin.categoria.listar');
+            $models['listcategorias'] = Categoria::paginate(5);
+            return view('admin.categoria.listar', compact($models));
         }
     
     function criar() {
@@ -34,7 +35,14 @@ class CategoriaController extends Controller {
         }
     
     function salvar(Request $request) {
-    	$categoria = new Categoria();
+    	$salvar = '';
+        if ($request->has('id')){
+            $salvar = ','.$request->get('id').',id';
+        } 
+        $this->validate($request, [
+            'nome' => 'required|min:4|unique:categorias,nome'.$salvar.''
+        ]);
+        $categoria = new Categoria();
     	$categoria->create($request->all());
         \Session::flash('mensagens-sucesso', 'Cadastrado com Sucesso');
             return view('admin.categoria.listar');
@@ -45,7 +53,7 @@ class CategoriaController extends Controller {
             return view('admin.categoria.form', $models);
         }
 
-    public function atualizar(CategoriaUpdateRequest $request, $id) {
+    public function atualizar(Request $request, $id) {
 
         $data = $request->all();
 
